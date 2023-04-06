@@ -21,45 +21,23 @@ hospitalRouter.get("/appointments",async(req,res)=>{
     res.send(hospital)
 })
 
-// hospitalRouter.get("", async (req, res) => {
-//     const { page = 1, limit , name, q, date } = req.query;
-//     try {
-//       if (date && name) {
-//         if (date === "asc") {
-//           let hospital = await hospitalModel.find({ name })
-//             .sort({ date: 1 })
-//             .skip((page - 1) * limit)
-//             .limit(limit);
-//           return res.status(200).send(hospital);
-//         } else if (date === "desc") {
-//           let hospital = await hospitalModel.find({ name })
-//             .sort({ date: -1 })
-//             .skip((page - 1) * limit)
-//             .limit(limit);
-//           return res.status(200).send(hospital);
-//         }
-//       } else if (q && name) {
-//         let temp = new RegExp(q, "i");
-//         let hospital = await hospitalModel.find({ name: temp }).limit(limit);
-//         return res.status(200).send(hospital);
-//       } else if (name) {
-//         let hospital = await hospitalModel.find({ name })
-//           .skip((page - 1) * limit)
-//           .limit(limit);
-//         return res.status(200).send(hospital);
-//       } else if (q) {
-//         let temp = new RegExp(q, "i");
-//         let hospital = await hospitalModel.find({ name: temp }).limit(limit);
-//         return res.status(200).send(hospital);
-//       } else {
-//         let hospital = await hospitalModel.find()
-//           .skip((page - 1) * limit)
-//           .limit(limit);
-//         return res.status(200).send(hospital);
-//       }
-//     } catch (error) {
-//       return res.send(error.message);
-//     }
-//   });
+
+
+hospitalRouter.get("/appointments/:category",async(req,res)=>{
+    const getData=await hospitalModel.find()
+    
+    return res.send(getData.filter((el)=>el.specialization===req.params.category))
+})
+hospitalRouter.get("/appointments/name/:query",async(req,res)=>{
+    const getData=await hospitalModel.find()
+    
+    return res.send(getData.find((el)=>el.name===req.params.query))
+})
+hospitalRouter.get("/appointments/page/:page",async(req,res)=>{
+    const getData=await hospitalModel.find()
+    const limit=4
+        res.send(getData.splice((limit*req.params.page)-limit,limit*req.params.page))
+})
+
 
 module.exports={hospitalRouter}
